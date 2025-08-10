@@ -85,9 +85,6 @@ public class HalfLife2RtxMount : SteamGameMount
 		var foundUsdaPaths = Explorer.FindFilesRecursive( DataDirectory, "*.usda" );
 		foreach ( var usdaFilePath in foundUsdaPaths )
 		{
-			if ( !UsdFile.IsValid( usdaFilePath ) )
-				continue;
-
 			// All texture paths are relative to DataDirectory, so for the sake of consistency, do the same for models.
 			yield return usdaFilePath.MakeRelativeTo( DataDirectory );
 		}

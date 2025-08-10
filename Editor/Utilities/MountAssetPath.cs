@@ -9,7 +9,19 @@ public readonly struct MountAssetPath
 		_sourceMount = mount;
 		_customExtension = customExtension;
 		
-		Absolute = Path.Combine( _sourceMount.AppDirectory, relativeAssetPath );
+		Absolute = Path.Combine( mount.AppDirectory, relativeAssetPath );
+		Relative = (relativeAssetPath + customExtension).ToLowerInvariant();
+		Mount = Path.Combine( $"mount://{_sourceMount.Ident}/", Relative );
+		
+		HashCode = Mount.GetHashCode();
+	}
+
+	public MountAssetPath( SteamGameMount mount, string basePath, string relativeAssetPath, string customExtension )
+	{
+		_sourceMount = mount;
+		_customExtension = customExtension;
+		
+		Absolute = Path.Combine( basePath, relativeAssetPath );
 		Relative = (relativeAssetPath + customExtension).ToLowerInvariant();
 		Mount = Path.Combine( $"mount://{_sourceMount.Ident}/", Relative );
 		
@@ -29,5 +41,5 @@ public readonly struct MountAssetPath
 	public override int GetHashCode() => HashCode;
 
 	public MountAssetPath MakeRelativeTo( string newBasePath )
-		=> new MountAssetPath( _sourceMount, Path.GetRelativePath( newBasePath, Absolute ), _customExtension );
+		=> new MountAssetPath( _sourceMount, newBasePath, Path.GetRelativePath( newBasePath, Absolute ), _customExtension );
 }

@@ -1,9 +1,10 @@
-﻿using Duccsoft.Mounting;
+﻿using Duccsoft.Formats;
+using Duccsoft.Mounting;
 using Sandbox.Mounting;
 
 namespace HalfLife2Rtx;
 
 public class ModelLoader( MountAssetPath modelPath ) : ResourceLoader<HalfLife2RtxMount>
 {
-	protected override object Load() => Sandbox.Model.Cube;
+	protected override object Load() => new UsdaReader().ReadFromPath( modelPath.Absolute ).LoadModel();
 }
