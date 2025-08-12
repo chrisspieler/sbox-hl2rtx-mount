@@ -4,17 +4,18 @@ namespace Duccsoft.Mounting;
 
 public class MountExplorer( SteamGameMount gameMount )
 {
-	public MountAssetPath AbsolutePathToAssetRef( string absolutePath, string customExtension )
+	public MountAssetPath SystemPathToAssetRef( string systemPath, string customExtension )
 	{
-		var relativePath = Path.GetRelativePath( gameMount.AppDirectory, absolutePath );
+		var relativePath = Path.GetRelativePath( gameMount.AppDirectory, systemPath );
 		return RelativePathToAssetRef( relativePath, customExtension );
 	}
 	
 	public MountAssetPath RelativePathToAssetRef( string relativePath, string customExtension )
 	{
 		return new MountAssetPath( 
-			gameMount, 
-			relativePath, 
+			gameMount,
+			baseDir: gameMount.AppDirectory, 
+			relativePath,
 			customExtension 
 		);
 	}
@@ -23,6 +24,6 @@ public class MountExplorer( SteamGameMount gameMount )
 	{
 		return Directory
 			.EnumerateFiles( directory, pattern, SearchOption.AllDirectories )
-			.Select( absPath => AbsolutePathToAssetRef( absPath, string.Empty ) );
+			.Select( systemPath => SystemPathToAssetRef( systemPath, string.Empty ) );
 	}
 }

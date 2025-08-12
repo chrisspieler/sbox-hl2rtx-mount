@@ -28,8 +28,8 @@ public class HalfLife2RtxMount : SteamGameMount
 		{
 			var extensions = pkgFile.AssetPaths.Select( Path.GetExtension ).Distinct().ToArray();
 
-			Assert.True( pkgFile.Assets.Count > 0, $".pkg file contains no assets: {pkgFile.Path.Relative}" );
-			Assert.True( pkgFile.Blobs.Count > 0, $".pkg file contains no blobs: {pkgFile.Path.Relative}" );
+			Assert.True( pkgFile.Assets.Count > 0, $".pkg file contains no assets: {pkgFile.Path.DisplayPath}" );
+			Assert.True( pkgFile.Blobs.Count > 0, $".pkg file contains no blobs: {pkgFile.Path.DisplayPath}" );
 			
 			foreach ( var asset in pkgFile.AssetPaths )
 			{
@@ -50,9 +50,9 @@ public class HalfLife2RtxMount : SteamGameMount
 				}
 			}
 			
-			Assert.True( extensions.Length == 1 && extensions[0] == ".dds", $".pkg file {pkgFile.Path.Relative} must contain only textures. Found extensions: {extString}" );
+			Assert.True( extensions.Length == 1 && extensions[0] == ".dds", $".pkg file {pkgFile.Path.DisplayPath} must contain only textures. Found extensions: {extString}" );
 			
-			Log.Trace( $"{pkgFile.Path.Relative} has {pkgFile.Assets.Count} asset(s) and {pkgFile.Blobs.Count} blob(s), extensions: {extString}" );
+			Log.Trace( $"{pkgFile.Path.DisplayPath} has {pkgFile.Assets.Count} asset(s) and {pkgFile.Blobs.Count} blob(s), extensions: {extString}" );
 		}
 
 		MaterialsFound = 0;
@@ -86,7 +86,9 @@ public class HalfLife2RtxMount : SteamGameMount
 		foreach ( var usdaFilePath in foundUsdaPaths )
 		{
 			// All texture paths are relative to DataDirectory, so for the sake of consistency, do the same for models.
-			yield return usdaFilePath.MakeRelativeTo( DataDirectory );
+			yield return usdaFilePath
+				.WithBaseDirectory( DataDirectory )
+				.WithExtension( ".vmdl" );
 		}
 	}
 }

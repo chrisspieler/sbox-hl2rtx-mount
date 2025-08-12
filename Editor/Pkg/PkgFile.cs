@@ -32,10 +32,10 @@ public class PkgFile
 	/// </summary>
 	public static bool IsValid( MountAssetPath pkgPath )
 	{
-		if ( !File.Exists( pkgPath.Absolute ) )
+		if ( !File.Exists( pkgPath.SystemPath ) )
 			return false;
 		
-		using var reader = new BinaryReader( File.OpenRead( pkgPath.Absolute ) );
+		using var reader = new BinaryReader( File.OpenRead( pkgPath.SystemPath ) );
 
 		if ( reader.BaseStream.Length < 0x10 )
 			return false;
@@ -45,10 +45,10 @@ public class PkgFile
 
 	public static PkgFile Load( MountAssetPath pkgPath )
 	{
-		using var reader = new BinaryReader( File.OpenRead( pkgPath.Absolute ) );
+		using var reader = new BinaryReader( File.OpenRead( pkgPath.SystemPath ) );
 
 		// Verify the file header.
-		Assert.AreEqual( reader.ReadUInt32(), Magic, $"Invalid magic in: {pkgPath.Relative}" );
+		Assert.AreEqual( reader.ReadUInt32(), Magic, $"Invalid magic in: {pkgPath.DisplayPath}" );
 		Assert.AreEqual( reader.ReadUInt32(), Version, "Unknown version number" );
 		
 		// Read the dict offset, then jump to it and read the asset and blob counts.

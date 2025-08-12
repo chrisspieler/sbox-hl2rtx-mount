@@ -41,7 +41,7 @@ public abstract class SteamGameMount : BaseGameMount
 		var commands = GetAllResources().ToArray();
 		foreach ( var addCommand in commands )
 		{
-			context.Add( addCommand.Type, addCommand.Path.Relative, addCommand.Loader );
+			context.Add( addCommand.Type, addCommand.Path.DisplayPath, addCommand.Loader );
 		}
 		
 		IsMounted = commands.Length > 0;
